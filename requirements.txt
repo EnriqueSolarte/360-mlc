@@ -4,3 +4,8 @@ csipy
 matplot
 omegaconf
 scikit-image
+pyquaternion
+tensorboard
+plyfile
+dill
+shapely
