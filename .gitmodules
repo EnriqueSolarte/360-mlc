@@ -1,3 +1,6 @@
 [submodule "mlc/config"]
 	path = mlc/config
 	url = git@github.com:EnriqueSolarte/nice_config_files.git
+[submodule "mlc/models/HorizonNet"]
+	path = mlc/models/HorizonNet
+	url = https://github.com/sunset1995/HorizonNet.git
