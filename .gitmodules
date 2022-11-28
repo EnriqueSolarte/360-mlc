@@ -1,0 +1,3 @@
+[submodule "mlc/config"]
+	path = mlc/config
+	url = git@github.com:EnriqueSolarte/nice_config_files.git
