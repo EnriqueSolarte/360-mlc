@@ -1,10 +1,10 @@
 # ! Pretrained HN models 
 #TODO: set dir to assets/pretrained_ckpt/
 mp3d:
-  ckpt: "${pth.root_data}/media/NFS/justin/code/360-retraining/models/HorizonNet/ckpt/resnet50_rnn__mp3d.pth"
+  ckpt: "/media/NFS/justin/code/360-retraining/models/HorizonNet/ckpt/resnet50_rnn__mp3d.pth"
 
 zind:
-  ckpt: "${pth.root_data}/media/NFS/justin/code/360-retraining/models/HorizonNet/ckpt/resnet50_rnn__zind.pth"
+  ckpt: "/media/NFS/justin/code/360-retraining/models/HorizonNet/ckpt/resnet50_rnn__zind.pth"
 
 st3d:
   ckpt: "/media/NFS/justin/code/360-retraining/models/HorizonNet/ckpt/resnet50_rnn__st3d.pth"

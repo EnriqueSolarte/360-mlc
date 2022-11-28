@@ -15,5 +15,5 @@ if __name__ == "__main__":
     create_mlc_label_dirs(cfg)
     
     for list_ly in iterator_room_scenes(cfg):
-        compute_and_store_mlc_labels(list_ly)
+        compute_and_store_mlc_labels(list_ly, save_vis=True)
     

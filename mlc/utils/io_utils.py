@@ -41,7 +41,7 @@ def load_obj(filename):
 def create_directory(output_dir, delete_prev=True):
     if os.path.exists(output_dir) and delete_prev:
         logging.warning(f"This directory will be deleted: {output_dir}")
-        input("This directory will be deleted. PRESS ANY KEY TO CONTINUE...")
+        input("PRESS ENTER TO CONTINUE...")
         shutil.rmtree(output_dir, ignore_errors=True)
     logging.info(f"Dir created: {output_dir}")
     os.makedirs(output_dir, exist_ok=True)

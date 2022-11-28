@@ -61,13 +61,13 @@ def compute_pseudo_labels(list_frames, ref_frame, shape=(512, 1024)):
     # ! Floor
     floor_map = _prj_map[512//2:, :]
     v_floor = np.argmax(floor_map, axis=0)
-    std_floor = get_std(floor_map, v_floor, cfg.kernels_mlc.std_kernel)
+    std_floor = get_std(floor_map, v_floor, cfg.runners.mvl.std_kernel)
     v_floor += 512//2
 
     # ! Ceiling
     ceiling_map = _prj_map[:512//2, :]
     v_ceiling = np.argmax(ceiling_map, axis=0)
-    std_ceiling = get_std(ceiling_map, v_ceiling, cfg.kernels_mlc.std_kernel)
+    std_ceiling = get_std(ceiling_map, v_ceiling, cfg.runners.mvl.std_kernel)
 
     u = np.linspace(0, ceiling_map.shape[1]-1, ceiling_map.shape[1]).astype(int)
     return np.vstack((u, v_ceiling)), np.vstack((u, v_floor)), std_ceiling, std_floor, _prj_map
@@ -108,18 +108,7 @@ def iterator_room_scenes(cfg):
     dataset.load_gt_labels = False
     dataset.load_npy = False
 
-    # ! Data Selection from cfg.data_selection cfg
-    if cfg.get("data_selection.active", False):
-        data = json.load(open(cfg.data_selection.selected_scenes_file))
-        selected_scene = data[cfg.data_selection.quantile]
-
     for scene in tqdm(dataset.list_scenes, desc="Reading MVL scenes..."):
-        if cfg.get("data_selection.active", False):
-            if scene not in selected_scene:
-                continue
-            logging.warning(f"Forcing selected scenes only")
-            logging.warning(f"Selection Scenes from{cfg.data_selection.selected_scenes_file}")
-
         cfg._room_scene = scene
         logging.info(f"Scene Name: {scene}")
         logging.info(f"Experiment ID: {cfg.id_exp}")
@@ -139,11 +128,11 @@ def iterator_room_scenes(cfg):
 
 
 def compute_and_store_mlc_labels(list_ly, save_vis=False):
-    _output_dir = ref.cfg.output_dir
-    _cfg = ref.cfg
+    _output_dir = list_ly[0].cfg.output_dir
+    _cfg = list_ly[0].cfg
     for ref in list_ly:
         uv_ceiling_ps, uv_floor_ps, std_ceiling, std_floor, prj_map = compute_pseudo_labels(
-            list_frames=sampling_frames(list_ly),
+            list_frames=list_ly,
             ref_frame=ref,
         )
 

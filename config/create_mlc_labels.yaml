@@ -3,7 +3,7 @@
 workspace_dir: ${rel_path:../}
 
 ckpt: mp3d
-cuda_device: 1
+cuda_device: 0
 target_dataset: mp3d_fpe
 
 output_dir: ${dirs.mlc_label_dir}/${id_exp}
@@ -15,13 +15,13 @@ auto_loading:
     data_dir: ${rel_path:./datasets.yaml}
     dirs: ${rel_path:./global_directories.yaml}
     scale_recover: ${rel_path:./scale_recover.yaml}
-    mp3d_fpe: ${rel_path:./mvl_data_cfg.yaml}
+    mvl_data: ${rel_path:./mvl_data.yaml}
 
 runners:
   mvl:
     label: mlc_label
-    data_dir: ${data_dir.${target_dataset}}
-    scene_list: ${data_mvl.scene_list_train}
+    data_dir: ${mvl_data.${target_dataset}}
+    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
     apply_scale_recover: True
     batch_size: 15
     size: -1
@@ -29,6 +29,7 @@ runners:
     min_likelihood_percent: 0.000001
     padding: 20
     max_room_factor_size: 2
+    std_kernel: [30, 10, 5]
 
 
 model:
