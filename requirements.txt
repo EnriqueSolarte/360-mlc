@@ -3,3 +3,4 @@ numpy
 csipy
 matplot
 omegaconf
+scikit-image

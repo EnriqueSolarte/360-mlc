@@ -1,6 +1,6 @@
 
 # ! Selecting MVL dataset
-workspace: ${rel_path:../}
+workspace_dir: ${rel_path:../}
 
 ckpt: mp3d
 cuda_device: 1
