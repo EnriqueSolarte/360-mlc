@@ -1,0 +1,18 @@
+# ! Scale Recovering Parameters
+max_vo_scale: 10
+min_vo_scale: 0.01
+sliding_windows: 10
+initial_batch: 10
+coarse_levels: 4
+scale_step: 0.01
+min_scale_variance: 0.01
+grid_size: 0.1 
+max_loops_iterations: 2
+max_ly_size: 20
+min_likelihood_percent: 0.5
+vis_threshold: 0.5
+min_estimations: 100
+early_stop: True
+random_batches: True
+min_vo_scale_diff: 0.01
+max_ocg_size: 10000

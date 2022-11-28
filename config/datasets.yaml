@@ -1,0 +1,42 @@
+
+# ! GT datasets
+zind:
+  test: 
+    labels_dir: /media/public_dataset/ZInD/zind_horizonnet/test/label/
+    img_dir: /media/public_dataset/ZInD/zind_horizonnet/test/rgb
+  train: 
+    labels_dir: /media/public_dataset/ZInD/zind_horizonnet/train/label
+    img_dir: /media/public_dataset/ZInD/zind_horizonnet/train/rgb
+
+mp3d:
+  train_valid: 
+    labels_dir: /media/public_dataset/360Layout/mp3d/train+valid/label
+    img_dir: /media/public_dataset/360Layout/mp3d/train+valid/rgb
+  test: 
+    labels_dir: /media/public_dataset/360Layout/mp3d/test
+    img_dir: /media/public_dataset/360Layout/mp3d/test/img
+  train: 
+    labels_dir: /media/public_dataset/360Layout/mp3d/train
+    img_dir: /media/public_dataset/360Layout/mp3d/train/img
+
+st3d:
+  test: 
+    labels_dir: /media/public_dataset/structured3D/structured3D_horizonnet/test/label
+    img_dir: /media/public_dataset/structured3D/structured3D_horizonnet/test/img
+  train: 
+    labels_dir: /media/public_dataset/structured3D/structured3D_horizonnet/train/label
+    img_dir: /media/public_dataset/structured3D/structured3D_horizonnet/train/img
+
+panos2d3d:
+  test:
+    labels_dir: /media/public_dataset/layoutnet_dataset/layoutnet_dataset/test/label
+    img_dir: /media/public_dataset/layoutnet_dataset/layoutnet_dataset/test/img
+  train:
+    labels_dir: /media/public_dataset/layoutnet_dataset/layoutnet_dataset/train/label
+    img_dir: /media/public_dataset/layoutnet_dataset/layoutnet_dataset/train/img
+
+mp3d_fpe:
+  test: 
+    labels_dir: /media/NFS/justin/retraining/mvl/pruned_test/label
+    img_dir: /media/NFS/justin/retraining/mvl/pruned_test/rgb
+  
