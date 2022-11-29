@@ -1,9 +1,8 @@
-
 # ! Selecting MVL dataset
 workspace_dir: ${rel_path:../}
 
-ckpt: mp3d
-cuda_device: 0
+ckpt: zind
+cuda_device: 1
 target_dataset: mp3d_fpe
 
 output_dir: ${dirs.mlc_label_dir}/${id_exp}

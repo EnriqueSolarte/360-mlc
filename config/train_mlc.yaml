@@ -1,0 +1,74 @@
+# ! Selecting MVL dataset
+workspace_dir: ${rel_path:../}
+
+ckpt: mp3d
+cuda_device: 0
+target_dataset: mp3d_fpe
+
+output_dir: ${dirs.output_dir}
+id_exp: hn_${ckpt}__${target_dataset}__mix_mlc_training
+
+mlc_label: hn_${ckpt}__${target_dataset}__mlc
+
+auto_loading:
+  trained_models: ${rel_path:./trained_models.yaml}
+  gt_data_dir: ${rel_path:./datasets.yaml}
+  mvl_data: ${rel_path:./mvl_data.yaml}
+  dirs: ${rel_path:./global_directories.yaml}
+  scale_recover: ${rel_path:./scale_recover.yaml}
+
+runners:
+  train:
+    data_dir: ${mvl_data.${mlc_label}}
+    label: mlc_label
+    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+    size: -1
+    batch_size: 5
+    num_workers: 4
+    mix_data_dir:
+      active: False
+      mlc_label:
+        size: 2000
+        data_dir: ${mvl_data.${mlc_label}}
+        scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+      gt:
+        size: 2000
+        data_dir: ${gt_data_dir.${ckpt}.train}
+
+  valid_iou:
+    data_dir: ${gt_data_dir.${target_dataset}.test}
+    batch_size: 4
+    label: "gt"
+    size: -1
+    num_workers: 4
+
+  mvl:
+    label: mlc_label
+    data_dir: ${mvl_data.${target_dataset}}
+    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+    apply_scale_recover: True
+    batch_size: 15
+    size: -1
+    grid_size: 0.025
+    min_likelihood_percent: 0.000001
+    padding: 20
+    max_room_factor_size: 2
+    std_kernel: [30, 10, 5]
+
+model:
+  ly_model: HorizonNet
+  ckpt: ${trained_models.${ckpt}.ckpt}
+  optimizer: Adam
+  loss: weighted_L1
+  # loss: L1
+  min_std: 0.001
+  epochs: 10
+  save_every: -1
+  lr: 0.00005
+  lr_decay_rate: 0.90
+  seed: 594277
+  bn_momentum: 0
+  freeze_earlier_blocks: -1
+  beta1: 0.9
+  weight_decay: 0.0
+  no_save: False

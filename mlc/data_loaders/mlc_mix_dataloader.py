@@ -25,12 +25,24 @@ class MLC_MixedDataDataLoader(data.Dataset):
         self.list_images = []
         self.list_labels = []
         self.list_std = []
-        for dt_mix in list(cfg.get('mix_data_dir').keys()):
-            dt = cfg['mix_data_dir'][dt_mix]
+        for dt_mix_key in list(cfg.get('mix_data_dir').keys()):
+            # ! Except for "active" the rest of key define a dataset
+            """
+            dt: 
+              scene_list:
+              size:
+              data_dir:
+                  img_dir:
+                  labels_dir:
+            """
+            if dt_mix_key == 'active':
+                continue
+            
+            dt = cfg['mix_data_dir'][dt_mix_key]
             if dt.get('scene_list', '') == '':
                 # ! Reading from available labels data       
                 list_frames = os.listdir(
-                    os.path.join(dt.data_dir.labels_dir, dt_mix)
+                    os.path.join(dt.data_dir.labels_dir, dt_mix_key)
                     )
             else:
                 assert os.path.exists(dt.scene_list)
@@ -43,9 +55,9 @@ class MLC_MixedDataDataLoader(data.Dataset):
             data = []    
             if dt.get('size', -1) < 0:
                 [data.append(pathlib.Path(fn).stem) for fn in list_frames]
-            elif cfg.size < 1:
-                np.random.shuffle(self.list_frames)
-                [data.append(pathlib.Path(fn).stem) for fn in list_frames[:int(cfg.size * self.list_frames.__len__())]] 
+            elif dt.size < 1:
+                np.random.shuffle(list_frames)
+                [data.append(pathlib.Path(fn).stem) for fn in list_frames[:int(dt.size * list_frames.__len__())]] 
             else:
                 np.random.shuffle(list_frames)
                 [data.append(pathlib.Path(fn).stem) for fn in list_frames[:dt.size]]
@@ -54,7 +66,7 @@ class MLC_MixedDataDataLoader(data.Dataset):
                 for fn in data]
             
             [self.list_labels.append(
-                os.path.join(dt.data_dir.labels_dir, dt_mix, f"{fn}.npy")) 
+                os.path.join(dt.data_dir.labels_dir, dt_mix_key, f"{fn}.npy")) 
                 for fn in data]
             
             [self.list_std.append(

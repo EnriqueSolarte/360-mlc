@@ -14,8 +14,8 @@ from mlc import MLC_ROOT
 from mlc.data_loaders.mlc_mix_dataloader import MLC_MixedDataDataLoader
 from mlc.data_loaders.mlc_simple_dataloader import MLC_SimpleDataLoader
 from mlc.data_loaders.mlc_simple_dataloader import ListLayout
-from mlc.utils.info_utils import get_mean_mse_h, print_run_information
-from mlc.utils.io_utils import save_json_dict
+from mlc.utils.info_utils import print_run_information
+from mlc.utils.io_utils import create_directory, save_json_dict
 from mlc.utils.layout_utils import filter_out_noisy_layouts
 from mlc.utils.loss_and_eval_utils import *
 from collections import OrderedDict
@@ -272,7 +272,6 @@ class WrapperHorizonNet:
         scale_recover = ScaleRecover(self.cfg)
 
         entropy_data_values = []
-        mse_eval = {}
         for scene in tqdm(dataset.list_scenes, desc="Reading MVL scenes..."):
             logging.info(f"Scene Name: {scene}")
             print_run_information(self.cfg)
@@ -285,24 +284,7 @@ class WrapperHorizonNet:
                 scale_recover.fully_vo_scale_estimation(list_ly=list_ly)
 
             print_run_information(self.cfg)  # we need it because VO-SCALE recover print several lines
-            # ! From here list_ly content bonds estimated by the current model
-
-            # ! Evaluate all entropy in a range of grid sizes for MSE analysis
-            mse_eval[scene] = {}
-            for grid_size in self.cfg.runners.mvl.grid_sizes:
-                entropy_data = eval_entropy_from_boundaries(
-                    list_boundaries=[ly.boundary_floor for ly in list_ly],
-                    grid_size=grid_size,
-                    min_likelihood=self.cfg.runners.mvl.min_likelihood_percent,
-                    padding=self.cfg.runners.mvl.padding,
-                    xedges=None,
-                    zedges=None
-                )
-                mse_eval[scene][f"{grid_size:1.3f}"] = entropy_data['entropy']
-
-            # fn = os.path.join(self.dir_ckpt, f"epoch_eval_{self.current_epoch}.json")
-            # save_json_dict(filename=fn, dict_data=mse_eval)
-
+        
             entropy_data = eval_entropy_from_boundaries(
                 list_boundaries=[ly.boundary_floor for ly in list_ly],
                 grid_size=self.cfg.runners.mvl.grid_size,
@@ -318,9 +300,6 @@ class WrapperHorizonNet:
             logging.info(f"Entropy MAX score: {np.max(entropy_data_values):.4f}")
             logging.info(f"Entropy MIN score: {np.min(entropy_data_values):.4f}")
             logging.info(f"Entropy STD score: {np.std(entropy_data_values):.4f}")
-
-        self.curr_scores["mse_H"] = mse_eval
-        self.curr_scores["mean_mse_H"] = get_mean_mse_h(mse_eval)
 
         if only_val:
             return
@@ -388,6 +367,7 @@ class WrapperHorizonNet:
 
     def set_log_dir(self):
         output_dir = os.path.join(self.cfg.output_dir, self.cfg.id_exp)
+        create_directory(output_dir, delete_prev=True)
         logging.info(f"Output directory: {output_dir}")
         self.dir_log = os.path.join(output_dir, 'log')
         self.dir_ckpt = os.path.join(output_dir, 'ckpt')
