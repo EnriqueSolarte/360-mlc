@@ -14,6 +14,34 @@ For more detailed information, please refer to:
 ## Video
 [![](https://user-images.githubusercontent.com/67839539/205503534-5ea1152e-c855-4b1a-90a0-277bb2731815.png)](https://youtu.be/x4Vt32egsdU)
 
+## Installation 
+
+The current implementation uses `python 3.7` and `Pytorch 1.13`. For convenience, we recommend using conda, minconda, pyenv or any environemt tool to keep isolate the python libraries. 
+
+```sh
+# Create and activate conda env (mlc) 
+conda create -n mcl python=3.7 
+conda activate mcl 
+
+# Install Pytorch
+conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
+
+# Install python dependencies
+pip install -r requirements.txt
+
+# clone 360-MLC (Note that we have added HorizonNet as submodule)
+git clone --recurse-submodules git@github.com:EnriqueSolarte/360-mlc.git
+
+# Install MLC library
+pip install .
+```
+
+
+
+
+
+
+
 ## Citation
 > 
     @inproceedings{solarte2022mlc,
