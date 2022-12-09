@@ -2,12 +2,12 @@
 workspace_dir: ${rel_path:../}
 
 ckpt: zind
-cuda_device: 1
-target_dataset: mp3d_fpe
+cuda_device: 0
 
 output_dir: ${dirs.mlc_label_dir}/${id_exp}
+id_exp: hn_${ckpt}__mp3d_fpe__mlc
 
-id_exp: hn_${ckpt}__${target_dataset}__mlc
+target_dataset: mp3d_fpe
 
 auto_loading:
     trained_models: ${rel_path:./trained_models.yaml}
@@ -19,8 +19,8 @@ auto_loading:
 runners:
   mvl:
     label: mlc_label
-    data_dir: ${mvl_data.${target_dataset}}
-    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+    data_dir: ${mvl_data.mp3d_fpe}
+    scene_list: ${mvl_data.mp3d_fpe.scene_list_train}
     apply_scale_recover: True
     batch_size: 15
     size: -1

@@ -51,6 +51,20 @@ python data/process_mp3d_fpe_data.py --path $MP3D_FPE_DIR
 
 ```
 
+## How to create 360-mlc labels 
+
+To create pseudo labels based on a pre-trained model, following the next commands: 
+
+```sh
+CKPT=zind # e.g. mp3d, zind, st3d or panos2d3d
+python main_create_mlc_labels.py --ckpt $CKPT --cfg ./assets/create_mlc_labels.yaml
+```
+To download `ckpt` pre-trained models, you can refer to the official pre-trained models in [HorizonNet](https://github.com/sunset1995/HorizonNet/tree/4eff713f8d446c53c479d86b4d06af166b724a74#:~:text=testing%20for%20HorizonNet.-,Pretrained%20Models,-resnet50_rnn__panos2d3d.pth).
+
+After to download a `ckpt` model, we suggest you to modify accordinally the cfg file `config/trained_models.yaml`
+
+
+
 
 
 
