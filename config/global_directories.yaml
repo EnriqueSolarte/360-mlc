@@ -1,5 +1,4 @@
 
-mp3d_fpe_dir: /media/public_dataset/MP3D_360_FPE/360_layout_challenge
+mp3d_fpe_dir: ${workspace_dir}/assets/mp3d_fpe_dataset
 mlc_label_dir: ${workspace_dir}/assets/mlc_labels
-pretrained_models_dir: ${workspace_dir}/assets/pretrained_ckpt
 output_dir: ${workspace_dir}/assets/mlc_results
