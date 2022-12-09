@@ -42,26 +42,39 @@ pip install .
 
 ## Dataset
 
-The dataset used for this implementation is the **MP3D-FPE** dataset released by [(Solarte et al. 2019 RA-L)](https://enriquesolarte.github.io/360-dfpe/). 
-To process this dataset, please follow the next commands:
+The dataset used in this implementation is the **MP3D-FPE** dataset released by [(Solarte et al. 2019 RA-L)](https://enriquesolarte.github.io/360-dfpe/). 
+To process this dataset, we have prepared a script for you `data/process_mp3d_fpe_data.py -h`. Please follow the next commands:
 
 ```sh 
 MP3D_FPE_DIR="<MP3D_FPE dataset directory>"
 python data/process_mp3d_fpe_data.py --path $MP3D_FPE_DIR
-
 ```
 
 ## How to create 360-mlc labels 
 
-To create pseudo labels based on a pre-trained model, following the next commands: 
+To create pseudo labels based on a pre-trained model, you must use `main_create_mlc_labels.py -h` by following the next commands: 
 
 ```sh
 CKPT=zind # e.g. mp3d, zind, st3d or panos2d3d
 python main_create_mlc_labels.py --ckpt $CKPT --cfg ./assets/create_mlc_labels.yaml
 ```
+
 To download `ckpt` pre-trained models, you can refer to the official pre-trained models in [HorizonNet](https://github.com/sunset1995/HorizonNet/tree/4eff713f8d446c53c479d86b4d06af166b724a74#:~:text=testing%20for%20HorizonNet.-,Pretrained%20Models,-resnet50_rnn__panos2d3d.pth).
 
-After to download a `ckpt` model, we suggest you to modify accordinally the cfg file `config/trained_models.yaml`
+After to download a `ckpt` model, you need to modify accordingly the cfg file `config/trained_models.yaml`. Finally, after to generate your mlc-labels (e.g. hn_mp3d__mp3d_fpe__mlc), you may have to update the cfg file `config/mvl_data.yaml`. 
+
+
+## Self-training
+
+To self-trained a model into a new dataset, e.g MP3D-FPE, you need two main requirements: (1) a pre-trained models and (2) generated mlc pseudo labels. Please check [How to create 360-mlc labels](##How-to-create-360-mlc-labels) for more information.
+
+For self-training using 360-MLC, we have prepared two scripts `main_train_w_iou_val.py -h` and `main_train.py -h`. To self-train, follow the next commands:
+
+```sh
+python main_train_w_iou_val.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc hn_${CKPT}__mp3d_fpe__mlc
+
+python main_train.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc hn_${CKPT}__mp3d_fpe__mlc
+```
 
 
 

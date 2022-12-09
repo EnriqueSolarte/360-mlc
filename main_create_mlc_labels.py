@@ -16,7 +16,7 @@ def get_passed_args():
     parser.add_argument(
         '--cfg',
         default="config/create_mlc_labels.yaml",
-        help='Config File')
+        help='Config File. Default config/create_mlc_labels.yaml')
     
     args = parser.parse_args()
     return args

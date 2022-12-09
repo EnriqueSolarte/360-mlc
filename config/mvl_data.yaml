@@ -1,9 +1,22 @@
 mp3d_fpe:
-  scene_list_train: ${rel_path:../data/${target_dataset}/mp3d_fpe_room_scenes_train.json}
-  scene_list_test: ${rel_path:../data/${target_dataset}/mp3d_fpe_room_scenes_test.json}
+  scene_list_train: ${rel_path:../data/mp3d_fpe_room_scenes_train.json}
+  scene_list_test: ${rel_path:../data/mp3d_fpe_room_scenes_test.json}
   img_dir: ${dirs.mp3d_fpe_dir}/img
   geometry_info: ${dirs.mp3d_fpe_dir}/geometry_info
 
 hn_mp3d__mp3d_fpe__mlc:
   img_dir: ${dirs.mp3d_fpe_dir}/img
   labels_dir: /media/NFS/kike/360_mlc/mlc_data/iccv_mlc_labels/hn_mp3d__mp3d_fpe__mlc/label
+  # labels_dir: ${rel_path:../assets/mlc_labels/hn_mp3d__mp3d_fpe__mlc/label
+
+hn_zind__mp3d_fpe__mlc:
+  img_dir: ${dirs.mp3d_fpe_dir}/img
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_zind__mp3d_fpe__mlc/label
+
+hn_st3d__mp3d_fpe__mlc:
+  img_dir: ${dirs.mp3d_fpe_dir}/img
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_st3d__mp3d_fpe__mlc/label
+
+hn_panos2d3d__mp3d_fpe__mlc:
+  img_dir: ${dirs.mp3d_fpe_dir}/img
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_panos2d3d__mp3d_fpe__mlc/label

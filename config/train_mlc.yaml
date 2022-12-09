@@ -3,12 +3,11 @@ workspace_dir: ${rel_path:../}
 
 ckpt: mp3d
 cuda_device: 0
-target_dataset: mp3d_fpe
+
+id_exp: ${mlc_label}
 
 output_dir: ${dirs.output_dir}
-id_exp: hn_${ckpt}__${target_dataset}__mix_mlc_training
-
-mlc_label: hn_${ckpt}__${target_dataset}__mlc
+mlc_label: hn_${ckpt}__mp3d_fpe__mlc
 
 auto_loading:
   trained_models: ${rel_path:./trained_models.yaml}
@@ -21,7 +20,7 @@ runners:
   train:
     data_dir: ${mvl_data.${mlc_label}}
     label: mlc_label
-    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+    scene_list: ${mvl_data.mp3d_fpe.scene_list_train}
     size: -1
     batch_size: 5
     num_workers: 4
@@ -30,13 +29,13 @@ runners:
       mlc_label:
         size: 2000
         data_dir: ${mvl_data.${mlc_label}}
-        scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+        scene_list: ${mvl_data.mp3d_fpe.scene_list_train}
       gt:
         size: 2000
         data_dir: ${gt_data_dir.${ckpt}.train}
 
   valid_iou:
-    data_dir: ${gt_data_dir.${target_dataset}.test}
+    data_dir: ${gt_data_dir.mp3d_fpe.test}
     batch_size: 4
     label: "gt"
     size: -1
@@ -44,8 +43,8 @@ runners:
 
   mvl:
     label: mlc_label
-    data_dir: ${mvl_data.${target_dataset}}
-    scene_list: ${mvl_data.${target_dataset}.scene_list_train}
+    data_dir: ${mvl_data.mp3d_fpe}
+    scene_list: ${mvl_data.mp3d_fpe.scene_list_train}
     apply_scale_recover: True
     batch_size: 15
     size: -1
