@@ -16,12 +16,12 @@ For more detailed information, please refer to:
 
 ## Installation 
 
-The current implementation uses `python 3.7` and `Pytorch 1.13`. For convenience, we recommend using conda, minconda, pyenv or any environemt tool to keep isolate the python libraries. 
+The current implementation uses `python 3.7` and `Pytorch 1.13`. For convenience, we recommend using conda, miniconda, pyenv or any environment tool to keep isolate this implementation. 
 
 ```sh
 # Create and activate conda env (mlc) 
-conda create -n mcl python=3.7 
-conda activate mcl 
+conda create -n mlc python=3.7 
+conda activate mlc 
 
 # Install Pytorch
 conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
@@ -36,7 +36,16 @@ git clone --recurse-submodules git@github.com:EnriqueSolarte/360-mlc.git
 pip install .
 ```
 
+## Dataset
 
+The dataset used for this implementation is the **MP3D-FPE** dataset released by [(Solarte et al. 2019 RA-L)](https://enriquesolarte.github.io/360-dfpe/). 
+To process this dataset, please follow the next commands:
+
+```sh 
+MP3D_FPE_DIR="<MP3D_FPE dataset directory>"
+python data/process_mp3d_fpe_data.py --path $MP3D_FPE_DIR
+
+```
 
 
 
