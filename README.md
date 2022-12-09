@@ -26,11 +26,15 @@ conda activate mlc
 # Install Pytorch
 conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvidia
 
-# Install python dependencies
-pip install -r requirements.txt
-
+# Assuming $HOME directory by default
+cd ~/
 # clone 360-MLC (Note that we have added HorizonNet as submodule)
 git clone --recurse-submodules git@github.com:EnriqueSolarte/360-mlc.git
+
+cd ~/360-mlc
+
+# Install python dependencies
+pip install -r requirements.txt
 
 # Install MLC library
 pip install .
