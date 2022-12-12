@@ -76,7 +76,7 @@ python main_train_w_iou_val.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc 
 python main_train.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc hn_${CKPT}__mp3d_fpe__mlc
 ```
 ## Global directories
-All data is saved at `.assets/` diretory by default. However, you can modify this in `./config/train_mlc.yam` and `./config/create_mlc_labels.yaml` in the parameter `dir`, e.g.:
+All data is saved at `.assets/` by default. However, you can modify this in `./config/train_mlc.yaml` and `./config/create_mlc_labels.yaml` by editing the parameter `dirs`, e.g.:
 
 ```sh 
 dirs: 
