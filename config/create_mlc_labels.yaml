@@ -7,7 +7,11 @@ cuda_device: 0
 output_dir: ${dirs.mlc_label_dir}/${id_exp}
 id_exp: hn_${ckpt}__mp3d_fpe__mlc
 
-target_dataset: mp3d_fpe
+# mp3d_fpe_dir: /media/public_dataset/MP3D_360_FPE/360_layout_challenge/
+dirs: 
+  mp3d_fpe_dir: ${workspace_dir}/assets/mp3d_fpe_dataset
+  mlc_label_dir: ${workspace_dir}/assets/mlc_labels
+  output_dir: ${workspace_dir}/assets/mlc_results
 
 auto_loading:
     trained_models: ${rel_path:./trained_models.yaml}

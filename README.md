@@ -28,7 +28,7 @@ conda install pytorch torchvision torchaudio pytorch-cuda=11.6 -c pytorch -c nvi
 
 # Assuming $HOME directory by default
 cd ~/
-# clone 360-MLC (Note that we have added HorizonNet as submodule)
+# clone 360-MLC (Note that we have added HorizonNet as a submodule)
 git clone --recurse-submodules git@github.com:EnriqueSolarte/360-mlc.git
 
 cd ~/360-mlc
@@ -56,7 +56,7 @@ To create pseudo labels based on a pre-trained model, you must use `main_create_
 
 ```sh
 CKPT=zind # e.g. mp3d, zind, st3d or panos2d3d
-python main_create_mlc_labels.py --ckpt $CKPT --cfg ./assets/create_mlc_labels.yaml
+python main_create_mlc_labels.py --ckpt $CKPT --cfg ./config/create_mlc_labels.yaml
 ```
 
 To download `ckpt` pre-trained models, you can refer to the official pre-trained models in [HorizonNet](https://github.com/sunset1995/HorizonNet/tree/4eff713f8d446c53c479d86b4d06af166b724a74#:~:text=testing%20for%20HorizonNet.-,Pretrained%20Models,-resnet50_rnn__panos2d3d.pth).
@@ -74,6 +74,15 @@ For self-training using 360-MLC, we have prepared two scripts `main_train_w_iou_
 python main_train_w_iou_val.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc hn_${CKPT}__mp3d_fpe__mlc
 
 python main_train.py --ckpt $CKPT --cfg ./config/train_mlc.yaml --mlc hn_${CKPT}__mp3d_fpe__mlc
+```
+## Global directories
+All data is saved at `.assets/` diretory by default. However, you can modify this in `./config/train_mlc.yam` and `./config/create_mlc_labels.yaml` in the parameter `dir`, e.g.:
+
+```sh 
+dirs: 
+  mp3d_fpe_dir: ${workspace_dir}/assets/mp3d_fpe_dataset
+  mlc_label_dir: ${workspace_dir}/assets/mlc_labels
+  output_dir: ${workspace_dir}/assets/mlc_results
 ```
 
 

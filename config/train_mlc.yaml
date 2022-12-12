@@ -9,11 +9,16 @@ id_exp: ${mlc_label}
 output_dir: ${dirs.output_dir}
 mlc_label: hn_${ckpt}__mp3d_fpe__mlc
 
+dirs: 
+  # mp3d_fpe_dir: ${workspace_dir}/assets/mp3d_fpe_dataset
+  mp3d_fpe_dir: /media/public_dataset/MP3D_360_FPE/360_layout_challenge/
+  mlc_label_dir: ${workspace_dir}/assets/mlc_labels
+  output_dir: ${workspace_dir}/assets/mlc_results
+
 auto_loading:
   trained_models: ${rel_path:./trained_models.yaml}
   gt_data_dir: ${rel_path:./datasets.yaml}
   mvl_data: ${rel_path:./mvl_data.yaml}
-  dirs: ${rel_path:./global_directories.yaml}
   scale_recover: ${rel_path:./scale_recover.yaml}
 
 runners:
