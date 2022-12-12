@@ -16,6 +16,11 @@ def get_passed_args():
         help='ckpt pre-trained model. Options zind, mp3d, st3d, panos2d3d. Default mp3d')
     
     parser.add_argument(
+        '--cuda',
+        default=0,
+        help='CUDA device (if any). Default 0')
+    
+    parser.add_argument(
         '--cfg',
         default="config/train_mlc.yaml",
         help='Config File. Default config/train_mlc.yaml')
@@ -44,6 +49,7 @@ if __name__ == "__main__":
     
     cfg = read_omega_cfg(cfg_file)
     cfg.ckpt = args.ckpt
+    cfg.cuda_device = args.cuda
     cfg.id_exp = f"{cfg.id_exp}__{args.desc}"
     
     if args.mlc is not  None:

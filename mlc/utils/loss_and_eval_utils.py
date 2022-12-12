@@ -7,7 +7,7 @@ import numpy as np
 def compute_L1_loss(y_est, y_ref):
         return F.l1_loss(y_est, y_ref)     
     
-def compute_weighted_L1(y_est, y_ref, std, min_std=1E-3):
+def compute_weighted_L1(y_est, y_ref, std, min_std=1E-2):
     return F.l1_loss(y_est/(std + min_std)**2, y_ref/(std + min_std)**2) 
     # return F.l1_loss(y_est, y_ref) 
     

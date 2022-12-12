@@ -20,6 +20,7 @@ def load_auto_loading(cfg):
     a_cfg = cfg.auto_loading
     #! Iteration for each path defined in cfg.auto_loading
     for key, path_cfg in a_cfg.items():
+        assert os.path.exists(path_cfg), f"Dir does not exist {path_cfg}"
         with open(path_cfg, "r") as f:
             _cfg = yaml.safe_load(f)
         cfg[key] = _cfg

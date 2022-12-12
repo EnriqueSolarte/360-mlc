@@ -6,17 +6,17 @@ mp3d_fpe:
 
 hn_mp3d__mp3d_fpe__mlc:
   img_dir: ${dirs.mp3d_fpe_dir}/img
-  labels_dir: /media/NFS/kike/360_mlc/mlc_data/iccv_mlc_labels/hn_mp3d__mp3d_fpe__mlc/label
-  # labels_dir: ${rel_path:../assets/mlc_labels/hn_mp3d__mp3d_fpe__mlc/label
+  # labels_dir: /media/NFS/kike/360_mlc/mlc_data/iccv_mlc_labels/hn_mp3d__mp3d_fpe__mlc/label
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_mp3d__mp3d_fpe__mlc/label}
 
 hn_zind__mp3d_fpe__mlc:
   img_dir: ${dirs.mp3d_fpe_dir}/img
-  labels_dir: ${rel_path:../assets/mlc_labels/hn_zind__mp3d_fpe__mlc/label
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_zind__mp3d_fpe__mlc/label}
 
 hn_st3d__mp3d_fpe__mlc:
   img_dir: ${dirs.mp3d_fpe_dir}/img
-  labels_dir: ${rel_path:../assets/mlc_labels/hn_st3d__mp3d_fpe__mlc/label
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_st3d__mp3d_fpe__mlc/label}
 
 hn_panos2d3d__mp3d_fpe__mlc:
   img_dir: ${dirs.mp3d_fpe_dir}/img
-  labels_dir: ${rel_path:../assets/mlc_labels/hn_panos2d3d__mp3d_fpe__mlc/label
+  labels_dir: ${rel_path:../assets/mlc_labels/hn_panos2d3d__mp3d_fpe__mlc/label}

@@ -79,13 +79,13 @@ def get_std(hw_map, peak, kernel):
     https://math.stackexchange.com/questions/857566/how-to-get-the-standard-deviation-of-a-given-histogram-image
     """
     # ! To avoid zero STD
-    hw_map = apply_kernel(hw_map.copy(), size=(kernel[0], kernel[1]), sigma=kernel[2])
+    # hw_map = apply_kernel(hw_map.copy(), size=(kernel[0], kernel[1]), sigma=kernel[2])
     m = np.linspace(0, hw_map.shape[0]-1, hw_map.shape[0]) + 0.5
     miu = np.repeat(peak.reshape(1, -1), hw_map.shape[0], axis=0)
     mm = np.repeat(m.reshape(-1, 1), hw_map.shape[1], axis=1)
     N = np.sum(hw_map, axis=0)
     std = np.sqrt(np.sum(hw_map*(mm-miu)**2, axis=0)/N)
-    return (std / hw_map.shape[0]) * np.pi * 0.5
+    return std / hw_map.shape[0]
 
 
 def median(c):
@@ -130,7 +130,7 @@ def iterator_room_scenes(cfg):
 def compute_and_store_mlc_labels(list_ly, save_vis=False):
     _output_dir = list_ly[0].cfg.output_dir
     _cfg = list_ly[0].cfg
-    for ref in list_ly:
+    for ref in tqdm(list_ly, desc="Estimating MLC Labels"):
         uv_ceiling_ps, uv_floor_ps, std_ceiling, std_floor, prj_map = compute_pseudo_labels(
             list_frames=list_ly,
             ref_frame=ref,
