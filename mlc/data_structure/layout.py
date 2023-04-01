@@ -101,7 +101,7 @@ class Layout:
             phi_coords=self.phi_coord[1, :])
 
         # ! Compute floor boundary
-        ly_scale = -self.camera_height / self.bearings_floor[1, :]
+        ly_scale = self.camera_height / self.bearings_floor[1, :]
         pcl = ly_scale * self.bearings_floor * self.scale
         self.cam_ref = CAM_REF.WC
         self.boundary_floor = self.pose.SE3_scaled()[:3,
