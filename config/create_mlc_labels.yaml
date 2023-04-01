@@ -1,11 +1,13 @@
 # ! Selecting MVL dataset
 workspace_dir: ${rel_path:../}
 
-ckpt: zind
+ckpt: <Required>
+target_dataset: <Required>
+
 cuda_device: 0
 
 output_dir: ${dirs.mlc_label_dir}/${id_exp}
-id_exp: hn_${ckpt}__mp3d_fpe__mlc
+id_exp: hn_${ckpt}__${target_dataset}__mlc
 
 # mp3d_fpe_dir: /media/public_dataset/MP3D_360_FPE/360_layout_challenge/
 dirs: 

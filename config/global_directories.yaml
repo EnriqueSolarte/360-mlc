@@ -1,0 +1,3 @@
+mp3d_fpe_dir: /media/public_dataset/mvl_challenge/mp3d_fpe/merged_data
+mlc_label_dir: ${workspace_dir}/assets/mlc_labels
+output_dir: ${workspace_dir}/assets/mlc_results
