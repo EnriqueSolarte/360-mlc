@@ -11,6 +11,8 @@ For more detailed information, please refer to:
 > NeurIPS 2022            
 > [**[Paper]**](https://arxiv.org/abs/2210.12935), [**[Project Page]**](https://enriquesolarte.github.io/360-mlc/), [**[Video]**](https://youtu.be/x4Vt32egsdU) 
 
+For fixed issues and change in the implementation, please refer to [CHANGELOG](CHANGELOG.md)
+
 ## Video
 [![](https://user-images.githubusercontent.com/67839539/205503534-5ea1152e-c855-4b1a-90a0-277bb2731815.png)](https://youtu.be/x4Vt32egsdU)
 
