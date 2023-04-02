@@ -67,7 +67,8 @@ class MLC_SimpleDataLoader(data.Dataset):
     def __getitem__(self, idx):
         # ! iteration per each self.data given a idx
         filename = os.path.splitext(self.data[idx])[0]
-        label_fn = os.path.join(self.cfg.data_dir.labels_dir, self.cfg.label, f"{filename}.npy")
+        label_fn = os.path.join(self.cfg.data_dir.labels_dir, self.cfg.label, f"{filename}")
+            
         std_fn = os.path.join(self.cfg.data_dir.labels_dir, 'std', f"{filename}.npy")
         image_fn = os.path.join(self.cfg.data_dir.img_dir, f"{filename}")
         
@@ -78,7 +79,12 @@ class MLC_SimpleDataLoader(data.Dataset):
         
         img = np.array(Image.open(image_fn), np.float32)[..., :3] / 255.
         
-        label = np.load(label_fn)
+        if os.path.exists(label_fn + ".npy"):
+            label = np.load(label_fn + ".npy")
+        elif os.path.exists(label_fn + ".npz"):
+            label = np.load(label_fn + ".npz")["phi_coords"]
+        else:
+            raise ValueError(f"Not found {label_fn}")
         
         # Random flip
         if self.cfg.get('flip', False) and np.random.randint(2) == 0:

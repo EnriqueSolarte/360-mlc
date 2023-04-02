@@ -10,7 +10,6 @@ output_dir: ${dirs.output_dir}
 mlc_label: hn_${ckpt}__mp3d_fpe__mlc
 
 dirs: 
-  # mp3d_fpe_dir: ${workspace_dir}/assets/mp3d_fpe_dataset
   mp3d_fpe_dir: /media/public_dataset/MP3D_360_FPE/360_layout_challenge/
   mlc_label_dir: ${workspace_dir}/assets/mlc_labels
   output_dir: ${workspace_dir}/assets/mlc_results
@@ -75,4 +74,4 @@ model:
   freeze_earlier_blocks: -1
   beta1: 0.9
   weight_decay: 0.0
-  no_save: False
+  save_ckpt: True

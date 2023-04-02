@@ -27,13 +27,13 @@ def get_passed_args():
     
     parser.add_argument(
         '--desc',
-        default="training_test",
+        default="training_example",
         help='Give a description for this training. Default training_test')
     
     parser.add_argument(
         '--mlc',
         default=None,
-        help='Define a custom mlc-label. By default hn_<ckpt>__mp3d_fpe__mlc is used')
+        help='Define a custom mlc-label directory. By default hn_<ckpt>__mp3d_fpe__mlc is used')
     
     args = parser.parse_args()
     return args
@@ -42,7 +42,6 @@ if __name__ == "__main__":
     args = get_passed_args()
      
     # ! Reading configuration
-    cfg_file = Path().resolve()
     cfg_file = Path(args.cfg).resolve()
 
     assert os.path.exists(cfg_file), f"File does not exits: {cfg_file}"   

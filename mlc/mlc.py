@@ -79,7 +79,7 @@ def get_std(hw_map, peak, kernel):
     https://math.stackexchange.com/questions/857566/how-to-get-the-standard-deviation-of-a-given-histogram-image
     """
     # ! To avoid zero STD
-    # hw_map = apply_kernel(hw_map.copy(), size=(kernel[0], kernel[1]), sigma=kernel[2])
+    hw_map = apply_kernel(hw_map.copy(), size=(kernel[0], kernel[1]), sigma=kernel[2])
     m = np.linspace(0, hw_map.shape[0]-1, hw_map.shape[0]) + 0.5
     miu = np.repeat(peak.reshape(1, -1), hw_map.shape[0], axis=0)
     mm = np.repeat(m.reshape(-1, 1), hw_map.shape[1], axis=1)
@@ -113,6 +113,7 @@ def iterator_room_scenes(cfg):
         logging.info(f"Scene Name: {scene}")
         logging.info(f"Experiment ID: {cfg.id_exp}")
         logging.info(f"Output_dir: {cfg.output_dir}")
+        logging.info(f"Iteration: {dataset.list_scenes.index(scene)}/{dataset.list_scenes.__len__()}")
         list_ly = dataset.get_list_ly(scene_name=scene)
 
         # ! Overwrite phi_coord by the estimates
