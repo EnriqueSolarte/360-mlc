@@ -1,6 +1,6 @@
 tqdm
 numpy
-csipy
+scipy
 matplot
 omegaconf
 scikit-image
