@@ -129,7 +129,7 @@ class WrapperHorizonNet:
             else:
                 raise ValueError("Loss function no defined in config file")
             if loss.item() is np.NAN:
-                raise ValueError("something is wrong KIKIN")
+                raise ValueError("something is wrong")
             self.tb_writer.add_scalar(
                 "train/loss", loss.item(), self.iterations)
             self.tb_writer.add_scalar(
@@ -173,7 +173,6 @@ class WrapperHorizonNet:
 
 
     # ! METHODS FOR VALIDATION
-
     def valid_iou_loop(self, only_val=False):
         print_run_information(self.cfg)
         self.net.eval()
@@ -336,7 +335,7 @@ class WrapperHorizonNet:
                 self.save_model("best_h_valid.pth")
 
     def save_model(self, filename):
-        if self.cfg.model.get("no_save", False):
+        if not self.cfg.model.get("save_ckpt", True):
             return
 
         # ! Saving the current model
@@ -367,7 +366,7 @@ class WrapperHorizonNet:
 
     def set_log_dir(self):
         output_dir = os.path.join(self.cfg.output_dir, self.cfg.id_exp)
-        create_directory(output_dir, delete_prev=True)
+        create_directory(output_dir, delete_prev=False)
         logging.info(f"Output directory: {output_dir}")
         self.dir_log = os.path.join(output_dir, 'log')
         self.dir_ckpt = os.path.join(output_dir, 'ckpt')
@@ -378,27 +377,29 @@ class WrapperHorizonNet:
 
     def set_train_dataloader(self):
         logging.info("Setting Training Dataloader")
-        if self.cfg.runners.train.mix_data_dir.active:
-            self.train_loader = DataLoader(
-                MLC_MixedDataDataLoader(self.cfg.runners.train),
-                batch_size=self.cfg.runners.train.batch_size,
-                shuffle=True,
-                drop_last=True,
-                num_workers=self.cfg.runners.train.num_workers,
-                pin_memory=True if self.device != 'cpu' else False,
-                worker_init_fn=lambda x: np.random.seed(),
-            )
-        else:
-            # ! By default it will train as self_supervised (no GT data mixed)
-            self.train_loader = DataLoader(
-                MLC_SimpleDataLoader(self.cfg.runners.train),
-                batch_size=self.cfg.runners.train.batch_size,
-                shuffle=True,
-                drop_last=True,
-                num_workers=self.cfg.runners.train.num_workers,
-                pin_memory=True if self.device != 'cpu' else False,
-                worker_init_fn=lambda x: np.random.seed(),
-            )
+        if self.cfg.runners.train.get("mix_data_dir", None) is not None:    
+            if self.cfg.runners.train.mix_data_dir.active:
+                self.train_loader = DataLoader(
+                    MLC_MixedDataDataLoader(self.cfg.runners.train),
+                    batch_size=self.cfg.runners.train.batch_size,
+                    shuffle=True,
+                    drop_last=True,
+                    num_workers=self.cfg.runners.train.num_workers,
+                    pin_memory=True if self.device != 'cpu' else False,
+                    worker_init_fn=lambda x: np.random.seed(),
+                )
+                return
+                
+        # ! By default it will train as self_supervised (no GT data mixed)
+        self.train_loader = DataLoader(
+            MLC_SimpleDataLoader(self.cfg.runners.train),
+            batch_size=self.cfg.runners.train.batch_size,
+            shuffle=True,
+            drop_last=True,
+            num_workers=self.cfg.runners.train.num_workers,
+            pin_memory=True if self.device != 'cpu' else False,
+            worker_init_fn=lambda x: np.random.seed(),
+        )
 
     def set_valid_dataloader(self):
         logging.info("Setting IoU Validation Dataloader")

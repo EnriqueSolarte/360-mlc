@@ -43,8 +43,6 @@ def process_mp3d_fpe(args):
     list_scenes = get_files_given_a_pattern(data_dir=data_dir, flag_file="frm_ref.txt", exclude=["depth", 'rgb', 'hn_mp3d'])
     
     for scene in tqdm(list_scenes, desc="reding scenes..."):
-        if "2t7WUuJeko7" not in scene:
-            continue
         
         room_gt_file = os.path.join(scene, "metadata", "room_gt_v0.0.yaml")
         assert os.path.isfile(room_gt_file)
@@ -96,7 +94,7 @@ def get_passed_args():
         help='Output directory. By default /assets/mp3d_fpe_dataset')
     
     parser.add_argument(
-        '-copy', action='store_false',
+        '-copy', action='store_true',
         help='Copy a img file instead of creating symbolic links. By default symbolic links will be created')
     
     args = parser.parse_args()

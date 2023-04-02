@@ -97,4 +97,4 @@ class MP3D_FPE:
         q = Quaternion(qx=qx, qy=qy, qz=qz, qw=qw)
         layout.pose.rot = q.rotation_matrix
         layout.pose.idx = layout.idx
-        layout.camera_height = geom["cam_h"]
+        layout.camera_height = geom.get(["cam_h"], 1)
