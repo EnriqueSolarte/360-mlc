@@ -3,7 +3,6 @@ Implementation taken from HorizonNet (CVPR 2019)
 https://sunset1995.github.io/HorizonNet/ 
 """
 import numpy as np
-from mlc.models.HorizonNet.misc import panostretch
 import logging
 
 def label_cor2ly_phi_coord(label_cor_path, shape=(512, 1024)):
@@ -43,6 +42,7 @@ def sort_xy_filter_unique(xs, ys, y_small_first=True):
 
 
 def cor_2_1d(cor, H, W):
+    from mlc.models.HorizonNet.misc import panostretch
     bon_ceil_x, bon_ceil_y = [], []
     bon_floor_x, bon_floor_y = [], []
     n_cor = len(cor)
