@@ -40,8 +40,8 @@ def draw_uncertainty_map(sigma_boundary, peak_boundary, shape=(512, 1024)):
         truncate=5,
         channel_axis=True)
 
-    img_map = img_map/img_map.max()
-    return img_map
+    img_map = 256*img_map/img_map.max()
+    return img_map.astype(np.uint8)
 
 
 def draw_pcl_on_image(image, pcl, color=(0, 255.0, 0)):

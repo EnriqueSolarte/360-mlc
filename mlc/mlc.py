@@ -13,6 +13,7 @@ from mlc.utils.projection_utils import uv2xyz, uv2sph, xyz2uv
 from mlc.utils.bayesian_utils import apply_kernel
 from mlc.models.utils import load_layout_model
 from mlc.datasets.utils import load_mvl_dataset
+from imageio import imread, imwrite
 
 
 def reproject_ly_boundaries(list_ly, ref_ly, shape=(512, 1024)):
@@ -22,9 +23,10 @@ def reproject_ly_boundaries(list_ly, ref_ly, shape=(512, 1024)):
     pose_W2ref = np.linalg.inv(ref_ly.pose.SE3_scaled())
 
     boundaries_xyz = []
-    [(boundaries_xyz.append(pose_W2ref[:3, :] @ extend_array_to_homogeneous(ly.boundary_floor)),
-      boundaries_xyz.append(pose_W2ref[:3, :] @ extend_array_to_homogeneous(ly.boundary_ceiling)))
-     for ly in list_ly]
+    [(boundaries_xyz.append(
+        pose_W2ref[:3, :] @ extend_array_to_homogeneous(ly.boundary_floor)),
+      boundaries_xyz.append(pose_W2ref[:3, :] @ extend_array_to_homogeneous(
+          ly.boundary_ceiling))) for ly in list_ly]
 
     # [(boundaries_xyz.append(pose_W2ref[:3, :] @ extend_array_to_homogeneous(
     #     ly.boundary_floor[:, ly.cam2boundary < np.quantile(ly.cam2boundary, 0.5)])),
@@ -40,11 +42,13 @@ def reproject_ly_boundaries(list_ly, ref_ly, shape=(512, 1024)):
     return uv
 
 
-def compute_pseudo_labels(list_frames, ref_frame, shape=(512, 1024)):
+def compute_pseudo_labels(list_frames,
+                          ref_frame,
+                          shape=(512, 1024),
+                          kernel_std=(30, 10, 5)):
     """
     Computes the pseudo labels based on the passed list of frames wrt the ref_frame
     """
-    cfg = ref_frame.cfg
 
     uv = reproject_ly_boundaries(list_frames, ref_frame, shape)
 
@@ -59,18 +63,20 @@ def compute_pseudo_labels(list_frames, ref_frame, shape=(512, 1024)):
     _prj_map = prj_map.copy()
 
     # ! Floor
-    floor_map = _prj_map[512//2:, :]
+    floor_map = _prj_map[512 // 2:, :]
     v_floor = np.argmax(floor_map, axis=0)
-    std_floor = get_std(floor_map, v_floor, cfg.runners.mvl.std_kernel)
-    v_floor += 512//2
+    std_floor = get_std(floor_map, v_floor, kernel_std)
+    v_floor += 512 // 2
 
     # ! Ceiling
-    ceiling_map = _prj_map[:512//2, :]
+    ceiling_map = _prj_map[:512 // 2, :]
     v_ceiling = np.argmax(ceiling_map, axis=0)
-    std_ceiling = get_std(ceiling_map, v_ceiling, cfg.runners.mvl.std_kernel)
+    std_ceiling = get_std(ceiling_map, v_ceiling, kernel_std)
 
-    u = np.linspace(0, ceiling_map.shape[1]-1, ceiling_map.shape[1]).astype(int)
-    return np.vstack((u, v_ceiling)), np.vstack((u, v_floor)), std_ceiling, std_floor, _prj_map
+    u = np.linspace(0, ceiling_map.shape[1] - 1,
+                    ceiling_map.shape[1]).astype(int)
+    return np.vstack((u, v_ceiling)), np.vstack(
+        (u, v_floor)), std_ceiling, std_floor, _prj_map
 
 
 def get_std(hw_map, peak, kernel):
@@ -79,12 +85,14 @@ def get_std(hw_map, peak, kernel):
     https://math.stackexchange.com/questions/857566/how-to-get-the-standard-deviation-of-a-given-histogram-image
     """
     # ! To avoid zero STD
-    hw_map = apply_kernel(hw_map.copy(), size=(kernel[0], kernel[1]), sigma=kernel[2])
-    m = np.linspace(0, hw_map.shape[0]-1, hw_map.shape[0]) + 0.5
+    hw_map = apply_kernel(hw_map.copy(),
+                          size=(kernel[0], kernel[1]),
+                          sigma=kernel[2])
+    m = np.linspace(0, hw_map.shape[0] - 1, hw_map.shape[0]) + 0.5
     miu = np.repeat(peak.reshape(1, -1), hw_map.shape[0], axis=0)
     mm = np.repeat(m.reshape(-1, 1), hw_map.shape[1], axis=1)
     N = np.sum(hw_map, axis=0)
-    std = np.sqrt(np.sum(hw_map*(mm-miu)**2, axis=0)/N)
+    std = np.sqrt(np.sum(hw_map * (mm - miu)**2, axis=0) / N)
     return std / hw_map.shape[0]
 
 
@@ -113,15 +121,16 @@ def iterator_room_scenes(cfg):
         logging.info(f"Scene Name: {scene}")
         logging.info(f"Experiment ID: {cfg.id_exp}")
         logging.info(f"Output_dir: {cfg.output_dir}")
-        logging.info(f"Iteration: {dataset.list_scenes.index(scene)}/{dataset.list_scenes.__len__()}")
+        logging.info(
+            f"Iteration: {dataset.list_scenes.index(scene)}/{dataset.list_scenes.__len__()}"
+        )
         list_ly = dataset.get_list_ly(scene_name=scene)
 
         # ! Overwrite phi_coord by the estimates
         model.estimate_within_list_ly(list_ly)
         filter_out_noisy_layouts(
             list_ly=list_ly,
-            max_room_factor_size=cfg.runners.mvl.max_room_factor_size
-        )
+            max_room_factor_size=cfg.runners.mvl.max_room_factor_size)
         if cfg.runners.mvl.apply_scale_recover:
             scale_recover.fully_vo_scale_estimation(list_ly=list_ly)
 
@@ -135,59 +144,60 @@ def compute_and_store_mlc_labels(list_ly, save_vis=False):
         uv_ceiling_ps, uv_floor_ps, std_ceiling, std_floor, prj_map = compute_pseudo_labels(
             list_frames=list_ly,
             ref_frame=ref,
-        )
+            kernel_std=_cfg.runners.mvl.kernel_std)
 
         # ! Saving pseudo labels
         uv = np.vstack((uv_ceiling_ps[1], uv_floor_ps[1]))
         std = np.vstack((std_ceiling, std_floor))
         phi_bon = (uv / 512 - 0.5) * np.pi
-        np.save(os.path.join(_output_dir, "label", _cfg.runners.mvl.label, ref.idx), phi_bon)
+        np.save(
+            os.path.join(_output_dir, "label", _cfg.runners.mvl.label,
+                         ref.idx), phi_bon)
         np.save(os.path.join(_output_dir, "label", "std", ref.idx), std)
 
         if not save_vis:
             return
 
-        uv_ceiling_hat = xyz2uv(ref.bearings_ceiling)
-        uv_floor_hat = xyz2uv(ref.bearings_floor)
-        img = ref.img.copy()
+        draw_mlc_labels(ref=ref,
+                        uv_ceiling_ps=uv_ceiling_ps,
+                        uv_floor_ps=uv_floor_ps,
+                        std_ceiling=std_ceiling,
+                        std_floor=std_floor,
+                        _output_dir=_output_dir)
 
-        draw_boundaries_uv(
-            image=img,
-            boundary_uv=uv_ceiling_hat,
-            color=COLOR_CYAN
-        )
-        draw_boundaries_uv(
-            image=img,
-            boundary_uv=uv_floor_hat,
-            color=COLOR_CYAN
-        )
 
-        draw_boundaries_uv(
-            image=img,
-            boundary_uv=uv_ceiling_ps,
-            color=COLOR_MAGENTA
-        )
-        draw_boundaries_uv(
-            image=img,
-            boundary_uv=uv_floor_ps,
-            color=COLOR_MAGENTA
-        )
+def draw_mlc_labels(ref, uv_ceiling_ps, uv_floor_ps, std_ceiling, std_floor,
+                    _output_dir):
+    uv_ceiling_hat = xyz2uv(ref.bearings_ceiling)
+    uv_floor_hat = xyz2uv(ref.bearings_floor)
+    img = ref.img.copy()
 
-        sigma_map = draw_uncertainty_map(
-            peak_boundary=np.hstack((uv_ceiling_ps, uv_floor_ps)),
-            sigma_boundary=np.hstack((std_ceiling, std_floor))
-        )
+    draw_boundaries_uv(image=img, boundary_uv=uv_ceiling_hat, color=COLOR_CYAN)
+    draw_boundaries_uv(image=img, boundary_uv=uv_floor_hat, color=COLOR_CYAN)
 
-        plt.figure(0, dpi=200)
-        plt.clf()
-        plt.subplot(211)
-        plt.suptitle(ref.idx)
-        plt.imshow(img)
-        plt.axis('off')
-        plt.subplot(212)
-        plt.imshow(sigma_map)
-        plt.axis('off')
-        plt.tight_layout()
-        plt.draw()
-        plt.savefig(os.path.join(_output_dir, "vis",
-                    f"{ref.idx}.jpg"), bbox_inches='tight')
+    draw_boundaries_uv(image=img,
+                       boundary_uv=uv_ceiling_ps,
+                       color=COLOR_MAGENTA)
+    draw_boundaries_uv(image=img, boundary_uv=uv_floor_ps, color=COLOR_MAGENTA)
+
+    sigma_map = draw_uncertainty_map(peak_boundary=np.hstack(
+        (uv_ceiling_ps, uv_floor_ps)),
+                                     sigma_boundary=np.hstack(
+                                         (std_ceiling, std_floor)))
+    
+    # plt.figure(ref.idx, dpi=200)
+    # plt.subplot(211)
+    # plt.suptitle(ref.idx)
+    # plt.imshow(img)
+    # plt.axis('off')
+    # plt.subplot(212)
+    # plt.imshow(sigma_map)
+    # plt.axis('off')
+    # plt.tight_layout()
+    # plt.draw()
+    # plt.savefig(os.path.join(_output_dir, "vis", f"{ref.idx}.jpg"),
+    #             bbox_inches='tight')
+    # plt.close()
+
+    comb_img = np.vstack((img, np.repeat(sigma_map[:, :, None], 3, axis=2)))
+    imwrite(os.path.join(_output_dir, "vis", f"{ref.idx}.jpg"), comb_img)
