@@ -9,7 +9,7 @@ from torch import optim
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 from mlc import MLC_ROOT
 from mlc.data_loaders.mlc_mix_dataloader import MLC_MixedDataDataLoader
 from mlc.data_loaders.mlc_simple_dataloader import MLC_SimpleDataLoader

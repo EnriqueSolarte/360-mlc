@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 def draw_uncertainty_boundary(image, sigma_boundary, peak_boundary, color=(1, 0, 1)):
     H, W, C = image.shape
     for u, v, sigma in zip(peak_boundary[0, :], peak_boundary[1, :], sigma_boundary[1, :]):
-        sampled_points = np.random.normal(v, sigma, 100).astype(np.int)
+        sampled_points = np.random.normal(v, sigma, 100).astype(np.uint8)
         sampled_points[sampled_points >= H] = H-1
         sampled_points[sampled_points <= 0] = 0
 
-        u_point = (np.ones_like(sampled_points) * u).astype(np.int)
+        u_point = (np.ones_like(sampled_points) * u).astype(np.uint8)
         image[sampled_points, u_point, :] = np.array(color)
         image[sampled_points, u_point, :] = np.array(color)
 
@@ -28,11 +28,11 @@ def draw_uncertainty_map(sigma_boundary, peak_boundary, shape=(512, 1024)):
     for u, v, sigma in zip(peak_boundary[0, :], peak_boundary[1, :], sigma_boundary):
         sigma_bon = (sigma / np.pi) * shape[0]
 
-        sampled_points = np.random.normal(v, sigma_bon, 512).astype(np.int)
+        sampled_points = np.random.normal(v, sigma_bon, 512).astype(np.uint8)
         sampled_points[sampled_points >= H] = H-1
         sampled_points[sampled_points <= 0] = 0
 
-        u_point = (np.ones_like(sampled_points) * u).astype(np.int)
+        u_point = (np.ones_like(sampled_points) * u).astype(np.uint8)
         img_map[sampled_points, u_point] = 1
 
     img_map = skimage.filters.gaussian(
