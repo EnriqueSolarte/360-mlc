@@ -184,20 +184,5 @@ def draw_mlc_labels(ref, uv_ceiling_ps, uv_floor_ps, std_ceiling, std_floor,
         (uv_ceiling_ps, uv_floor_ps)),
                                      sigma_boundary=np.hstack(
                                          (std_ceiling, std_floor)))
-    
-    # plt.figure(ref.idx, dpi=200)
-    # plt.subplot(211)
-    # plt.suptitle(ref.idx)
-    # plt.imshow(img)
-    # plt.axis('off')
-    # plt.subplot(212)
-    # plt.imshow(sigma_map)
-    # plt.axis('off')
-    # plt.tight_layout()
-    # plt.draw()
-    # plt.savefig(os.path.join(_output_dir, "vis", f"{ref.idx}.jpg"),
-    #             bbox_inches='tight')
-    # plt.close()
-
     comb_img = np.vstack((img, np.repeat(sigma_map[:, :, None], 3, axis=2)))
     imwrite(os.path.join(_output_dir, "vis", f"{ref.idx}.jpg"), comb_img)

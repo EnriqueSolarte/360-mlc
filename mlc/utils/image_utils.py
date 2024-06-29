@@ -25,23 +25,24 @@ def draw_uncertainty_boundary(image, sigma_boundary, peak_boundary, color=(1, 0,
 def draw_uncertainty_map(sigma_boundary, peak_boundary, shape=(512, 1024)):
     H, W = shape
     img_map = np.zeros((H, W))
-    for u, v, sigma in zip(peak_boundary[0, :], peak_boundary[1, :], sigma_boundary):
+    for u, v, sigma in zip(peak_boundary[0, :], peak_boundary[1, :],
+                           sigma_boundary):
         sigma_bon = (sigma / np.pi) * shape[0]
 
-        sampled_points = np.random.normal(v, sigma_bon, 512).astype(np.uint8)
-        sampled_points[sampled_points >= H] = H-1
+        sampled_points = np.random.normal(v, sigma_bon, 512).astype(np.int16)
+        sampled_points[sampled_points >= H] = H - 1
         sampled_points[sampled_points <= 0] = 0
 
-        u_point = (np.ones_like(sampled_points) * u).astype(np.uint8)
+        u_point = (np.ones_like(sampled_points) * u).astype(np.int16)
         img_map[sampled_points, u_point] = 1
 
-    img_map = skimage.filters.gaussian(
-        img_map, sigma=(15, 5),
-        truncate=5,
-        channel_axis=True)
+    img_map = skimage.filters.gaussian(img_map,
+                                       sigma=(15, 5),
+                                       truncate=5,
+                                       channel_axis=True)
 
-    img_map = 256*img_map/img_map.max()
-    return img_map.astype(np.uint8)
+    img_map = img_map / img_map.max()
+    return (img_map * 255).astype(np.uint8)
 
 
 def draw_pcl_on_image(image, pcl, color=(0, 255.0, 0)):
@@ -64,7 +65,8 @@ def draw_pcl_on_image(image, pcl, color=(0, 255.0, 0)):
 def draw_boundaries_uv(image, boundary_uv, color=(0, 1, 0), size=2):
     if image.shape.__len__() == 3:
         for i in range(size):
-            image[(boundary_uv[1]+i) % image.shape[0], boundary_uv[0], :] = np.array(color)
+            image[(boundary_uv[1]+i) % image.shape[0],
+                  boundary_uv[0], :] = np.array(color)
             # image[(boundary_uv[1]-i)% 0, boundary_uv[0], :] = np.array(color)
     else:
         for i in range(size):
@@ -83,8 +85,10 @@ def draw_boundaries_phi_coords(image, phi_coords, color=(0, 255, 0), size=2):
     uv_ceiling = xyz2uv(bearings_ceiling)
     uv_floor = xyz2uv(bearings_floor)
 
-    draw_boundaries_uv(image=image, boundary_uv=uv_ceiling, color=color, size=size)
-    draw_boundaries_uv(image=image, boundary_uv=uv_floor, color=color, size=size)
+    draw_boundaries_uv(image=image, boundary_uv=uv_ceiling,
+                       color=color, size=size)
+    draw_boundaries_uv(image=image, boundary_uv=uv_floor,
+                       color=color, size=size)
 
     return image
 
