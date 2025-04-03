@@ -44,8 +44,12 @@ pip install .
 
 ## Dataset
 
+
 The dataset used in this implementation is the **MP3D-FPE** dataset released by [(Solarte et al. 2019 RA-L)](https://enriquesolarte.github.io/360-dfpe/). 
 To process this dataset, we have prepared a script for you `data/process_mp3d_fpe_data.py -h`. Please follow the next commands:
+
+> [!WARNING]
+> The MP3D-FPE dataset, along with others datsets, has been restructured for standardization purposes. You can access the dataset at [mvl-datasets](https://huggingface.co/datasets/EnriqueSolarte/mvl_datasets). We also invite you to take a look at our latest work on this topic: [ray-casting-mlc/](https://enriquesolarte.github.io/ray-casting-mlc/), where you will find additional evaluations, code examples, quick scripts for generating pseudo labels, visualizations, and more. If you encounter any issues, please feel free to open an issue. We’re actively checking these projects.
 
 ```sh 
 MP3D_FPE_DIR="<MP3D_FPE dataset directory>"
